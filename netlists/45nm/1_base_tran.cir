@@ -1,0 +1,22 @@
+* conventional inverter: VTC, delay, average power
+.include ../../models/45nm_HP.pm
+Vdd vdd 0 1.0
+Vin in 0 PULSE(0 1.0 0.2n 20p 20p 1n 2n)
+Mp out in vdd vdd pmos W=180n L=45n
+Mn out in 0 0 nmos W=90n L=45n
+Cload out 0 5f
+
+.control
+* --- VTC ---
+dc Vin 0 1.0 0.01
+meas dc vm WHEN v(out)=v(in)
+wrdata ../../results/base45_vtc.txt v(out)
+
+* --- transient ---
+tran 1p 6n
+meas tran tpHL TRIG v(in) VAL=0.5 RISE=1 TARG v(out) VAL=0.5 FALL=1
+meas tran tpLH TRIG v(in) VAL=0.5 FALL=1 TARG v(out) VAL=0.5 RISE=1
+meas tran iavg AVG i(Vdd) FROM=2.2n TO=4.2n
+wrdata ../../results/base45_tran.txt v(in) v(out)
+.endc
+.end

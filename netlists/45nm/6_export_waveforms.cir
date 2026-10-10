@@ -1,0 +1,33 @@
+* Export VTC and transient waveforms for all three designs (45nm) for plotting
+.include ../../models/45nm_HP.pm
+.param vdd=1.0 lmin=45n wn=90n wp=180n wlcp=720n wlcn=180n
+Vin in 0 DC 0 PULSE(0 {vdd} 2n 20p 20p 10n 20n)
+Vdc vdc 0 {vdd}
+Vdp vdp 0 {vdd}
+Vdi vdi 0 {vdd}
+* conventional
+Mpc outc in  vdc vdc pmos W={wp} L={lmin}
+Mnc outc in  0   0   nmos W={wn} L={lmin}
+Cc  outc 0 5f
+* paper LECTOR
+Mpp  ap   in  vdp vdp pmos W={wp} L={lmin}
+Mlpp outp bp  ap  vdp pmos W={wp} L={lmin}
+Mlnp outp ap  bp  0   nmos W={wn} L={lmin}
+Mnp  bp   in  0   0   nmos W={wn} L={lmin}
+Cp  outp 0 5f
+* improved LECTOR
+Mpi  ai   in  vdi vdi pmos W={wp}   L={lmin}
+Mlpi outi bi  ai  vdi pmos W={wlcp} L={lmin}
+Mlni outi ai  bi  0   nmos W={wlcn} L={lmin}
+Mni  bi   in  0   0   nmos W={wn}   L={lmin}
+Ci  outi 0 5f
+
+.control
+set wr_singlescale
+set wr_vecnames
+dc Vin 0 1.0 0.01
+wrdata ../../results/vtc.txt v(outc) v(outp) v(outi)
+tran 2p 42n
+wrdata ../../results/tran.txt v(in) v(outc) v(outp) v(outi)
+.endc
+.end

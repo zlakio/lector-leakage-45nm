@@ -1,0 +1,64 @@
+* All three designs at one node: conventional, paper LECTOR, improved LECTOR
+.include ../../models/45nm_HP.pm
+.param vdd=1.0 lmin=45n wn=90n wp=180n wlcp=720n wlcn=180n
+.csparam vddv={vdd}
+Vin in 0 DC 0 PULSE(0 {vdd} 2n 20p 20p 10n 20n)
+Vdc vdc 0 {vdd}
+Vdp vdp 0 {vdd}
+Vdi vdi 0 {vdd}
+* conventional
+Mpc outc in  vdc vdc pmos W={wp} L={lmin}
+Mnc outc in  0   0   nmos W={wn} L={lmin}
+Cc  outc 0 5f
+* paper LECTOR (extra transistors same size as main ones)
+Mpp  ap   in  vdp vdp pmos W={wp} L={lmin}
+Mlpp outp bp  ap  vdp pmos W={wp} L={lmin}
+Mlnp outp ap  bp  0   nmos W={wn} L={lmin}
+Mnp  bp   in  0   0   nmos W={wn} L={lmin}
+Cp  outp 0 5f
+* improved LECTOR (sized extra transistors)
+Mpi  ai   in  vdi vdi pmos W={wp}   L={lmin}
+Mlpi outi bi  ai  vdi pmos W={wlcp} L={lmin}
+Mlni outi ai  bi  0   nmos W={wlcn} L={lmin}
+Mni  bi   in  0   0   nmos W={wn}   L={lmin}
+Ci  outi 0 5f
+
+.control
+let half = vddv/2
+alter vin dc = 0
+op
+let c0 = abs(i(vdc))
+let p0 = abs(i(vdp))
+let m0 = abs(i(vdi))
+set sc0 = "$&c0"
+set sp0 = "$&p0"
+set sm0 = "$&m0"
+alter vin dc = $&vddv
+op
+let c1 = abs(i(vdc))
+let p1 = abs(i(vdp))
+let m1 = abs(i(vdi))
+set sc1 = "$&c1"
+set sp1 = "$&p1"
+set sm1 = "$&m1"
+alter vin dc = 0
+tran 2p 42n
+meas tran tphl_c TRIG v(in) VAL=$&half RISE=2 TARG v(outc) VAL=$&half FALL=2
+meas tran tplh_c TRIG v(in) VAL=$&half FALL=2 TARG v(outc) VAL=$&half RISE=2
+meas tran iavg_c AVG i(vdc) FROM=22n TO=42n
+meas tran vh_c MAX v(outc) FROM=22n TO=42n
+meas tran tphl_p TRIG v(in) VAL=$&half RISE=2 TARG v(outp) VAL=$&half FALL=2
+meas tran tplh_p TRIG v(in) VAL=$&half FALL=2 TARG v(outp) VAL=$&half RISE=2
+meas tran iavg_p AVG i(vdp) FROM=22n TO=42n
+meas tran vh_p MAX v(outp) FROM=22n TO=42n
+meas tran tphl_i TRIG v(in) VAL=$&half RISE=2 TARG v(outi) VAL=$&half FALL=2
+meas tran tplh_i TRIG v(in) VAL=$&half FALL=2 TARG v(outi) VAL=$&half RISE=2
+meas tran iavg_i AVG i(vdi) FROM=22n TO=42n
+meas tran vh_i MAX v(outi) FROM=22n TO=42n
+echo ""
+echo "RESULTS (design: leak Vin=0 | leak Vin=1 | tpHL | tpLH | avg supply current | output high)"
+echo "conv    : $sc0 $sc1 | $&tphl_c $&tplh_c | $&iavg_c | $&vh_c"
+echo "paper   : $sp0 $sp1 | $&tphl_p $&tplh_p | $&iavg_p | $&vh_p"
+echo "improved: $sm0 $sm1 | $&tphl_i $&tplh_i | $&iavg_i | $&vh_i"
+.endc
+.end

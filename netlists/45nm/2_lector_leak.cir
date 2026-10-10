@@ -1,0 +1,22 @@
+* LECTOR inverter (paper version), 45nm PTM HP: static leakage
+.include ../../models/45nm_HP.pm
+Vdd vdd 0 1.0
+Vin in 0 0
+* a = bottom of pull-up, b = top of pull-down
+Mp   a   in  vdd vdd pmos W=180n L=45n
+Mlp  out b   a   vdd pmos W=180n L=45n
+Mln  out a   b   0   nmos W=90n  L=45n
+Mn   b   in  0   0   nmos W=90n  L=45n
+
+.control
+op
+echo "LECTOR Vin=0 supply current:"
+print i(vdd)
+print v(out) v(a) v(b)
+alter Vin = 1.0
+op
+echo "LECTOR Vin=1 supply current:"
+print i(vdd)
+print v(out) v(a) v(b)
+.endc
+.end

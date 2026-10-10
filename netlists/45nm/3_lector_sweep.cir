@@ -1,0 +1,36 @@
+* LECTOR sizing sweep (Improvement A), 45nm PTM HP, 50 MHz
+.include ../../models/45nm_HP.pm
+Vdd vdd 0 1.0
+Vin in 0 DC 0 PULSE(0 1.0 2n 20p 20p 10n 20n)
+Mp   a   in  vdd vdd pmos W=180n L=45n
+Mlp  out b   a   vdd pmos W=180n L=45n
+Mln  out a   b   0   nmos W=90n  L=45n
+Mn   b   in  0   0   nmos W=90n  L=45n
+Cload out 0 5f
+
+.control
+echo "wlcp wlcn | leak0(A) leak1(A) | tpHL tpLH | vhigh vlow | iavg"
+foreach wp 180n 360n 540n 720n
+  foreach wn 90n 180n 360n
+    alter mlp w = $wp
+    alter mln w = $wn
+    alter vin dc = 0
+    op
+    let l0 = abs(i(vdd))
+    set s0 = "$&l0"
+    alter vin dc = 1.0
+    op
+    let l1 = abs(i(vdd))
+    set s1 = "$&l1"
+    alter vin dc = 0
+    tran 2p 42n
+    meas tran tphl TRIG v(in) VAL=0.5 RISE=2 TARG v(out) VAL=0.5 FALL=2
+    meas tran tplh TRIG v(in) VAL=0.5 FALL=2 TARG v(out) VAL=0.5 RISE=2
+    meas tran iavg AVG i(vdd) FROM=22n TO=42n
+    meas tran vhigh MAX v(out) FROM=22n TO=42n
+    meas tran vlow MIN v(out) FROM=22n TO=42n
+    echo "$wp $wn | $s0 $s1 | $&tphl $&tplh | $&vhigh $&vlow | $&iavg"
+  end
+end
+.endc
+.end

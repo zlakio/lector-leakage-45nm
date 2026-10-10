@@ -1,0 +1,17 @@
+* conventional inverter, 45nm PTM HP
+.include ../../models/45nm_HP.pm
+Vdd vdd 0 1.0
+Vin in 0 0
+Mp out in vdd vdd pmos W=180n L=45n
+Mn out in 0 0 nmos W=90n L=45n
+
+.control
+op
+echo "Vin=0 supply current:"
+print i(vdd)
+alter Vin = 1.0
+op
+echo "Vin=1 supply current:"
+print i(vdd)
+.endc
+.end

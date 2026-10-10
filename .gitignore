@@ -1,0 +1,4 @@
+models/
+spice_model_collections/
+__pycache__/
+*.raw

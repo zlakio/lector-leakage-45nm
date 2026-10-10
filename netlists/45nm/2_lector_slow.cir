@@ -1,0 +1,27 @@
+* LECTOR inverter (paper version), 45nm PTM HP: VTC, delay, power
+.include ../../models/45nm_HP.pm
+Vdd vdd 0 1.0
+Vin in 0 PULSE(0 1.0 2n 20p 20p 10n 20n)
+Mp   a   in  vdd vdd pmos W=180n L=45n
+Mlp  out b   a   vdd pmos W=180n L=45n
+Mln  out a   b   0   nmos W=90n  L=45n
+Mn   b   in  0   0   nmos W=90n  L=45n
+Cload out 0 5f
+
+.control
+dc Vin 0 1.0 0.01
+meas dc vm WHEN v(out)=v(in)
+wrdata ../../results/lector45slow_vtc.txt v(out)
+
+tran 10p 60n
+meas tran tpHL TRIG v(in) VAL=0.5 RISE=1 TARG v(out) VAL=0.5 FALL=1
+meas tran tpLH TRIG v(in) VAL=0.5 FALL=1 TARG v(out) VAL=0.5 RISE=1
+meas tran iavg AVG i(Vdd) FROM=22n TO=42n
+meas tran vhigh MAX v(out) FROM=22n TO=42n
+meas tran vlow MIN v(out) FROM=22n TO=42n
+wrdata ../../results/lector45slow_tran.txt v(in) v(out)
+meas tran vout_end FIND v(out) AT=21.9n
+meas tran vb_end FIND v(b) AT=21.9n
+meas tran va_end FIND v(a) AT=21.9n
+.endc
+.end

@@ -1,0 +1,38 @@
+* leakage vs temperature: conventional, paper LECTOR, improved LECTOR (45nm)
+.include ../../models/45nm_HP.pm
+Vin in 0 DC 0
+Vdc vdc 0 1.0
+Vdp vdp 0 1.0
+Vdi vdi 0 1.0
+* conventional
+Mpc outc in  vdc vdc pmos W=180n L=45n
+Mnc outc in  0   0   nmos W=90n  L=45n
+* paper LECTOR
+Mpp  ap   in  vdp vdp pmos W=180n L=45n
+Mlpp outp bp  ap  vdp pmos W=180n L=45n
+Mlnp outp ap  bp  0   nmos W=90n  L=45n
+Mnp  bp   in  0   0   nmos W=90n  L=45n
+* improved LECTOR (PMOS LCT 720n, NMOS LCT 180n)
+Mpi  ai   in  vdi vdi pmos W=180n L=45n
+Mlpi outi bi  ai  vdi pmos W=720n L=45n
+Mlni outi ai  bi  0   nmos W=180n L=45n
+Mni  bi   in  0   0   nmos W=90n  L=45n
+
+.control
+echo "temp(C) vin | conv(A) paper(A) improved(A)"
+foreach t 27 50 75 110
+  set temp = $t
+  foreach v 0 1.0
+    alter vin dc = $v
+    op
+    let c = abs(i(vdc))
+    let p = abs(i(vdp))
+    let m = abs(i(vdi))
+    set sc = "$&c"
+    set sp = "$&p"
+    set sm = "$&m"
+    echo "$t $v | $sc $sp $sm"
+  end
+end
+.endc
+.end
