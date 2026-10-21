@@ -1,0 +1,24 @@
+NOISE MARGINS (static, from the DC sweep)
+design              VOH    VOL    VIL    VIH    NMH    NML
+Conventional      1.000  0.000  0.390  0.590  0.410  0.390
+Paper LECTOR      0.995  0.000  0.380  0.550  0.445  0.380
+Improved LECTOR   0.998  0.000  0.410  0.560  0.438  0.410
+
+At-speed output high (50 MHz) and the resulting high-side noise margin (VIH from above):
+Conventional     VOH(50 MHz) = 1.000 V   NMH =  0.410 V
+Paper LECTOR     VOH(50 MHz) = 0.803 V   NMH =  0.253 V
+Improved LECTOR  VOH(50 MHz) = 0.947 V   NMH =  0.387 V
+
+BREAK-EVEN (Improved LECTOR vs Conventional), 27 C
+leakage saved      : 0.714 nW
+extra dynamic power: 26.9 nW at 50 MHz (switching every cycle)
+break-even activity: 2.66% of full switching -> equivalent toggle rate 1.33 MHz
+
+Same calculation at higher temperature (extra dynamic power assumed unchanged):
+   27 C: leakage saved  0.71 nW -> break-even  2.66%  ( 1.33 MHz)
+   50 C: leakage saved  1.15 nW -> break-even  4.27%  ( 2.14 MHz)
+   75 C: leakage saved  1.79 nW -> break-even  6.68%  ( 3.34 MHz)
+  110 C: leakage saved  3.05 nW -> break-even 11.34%  ( 5.67 MHz)
+
+Paper LECTOR vs Conventional: dynamic power is LOWER only because its output swings less:
+dynamic 224.6 nW vs 267.6 nW; leakage 0.603 nW vs 1.362 nW

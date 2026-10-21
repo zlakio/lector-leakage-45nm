@@ -1,0 +1,14 @@
+Conventional: tpd 26.16 ps, leakage 1.362 nW, width 270 nm
+
+LCT ratios are relative to the main transistor of the same type; k scales the whole inverter.
+ PMOS/NMOS LCT      k  width(nm)  leak(nW)  vs conv  tpd(ps)  Vhigh  Pdyn(nW)  PDP(aJ)
+       1x / 1x   4.38       2366     2.835  -108.1%    26.16  0.947     350.0      9.2
+       2x / 1x   4.44       3200     2.920  -114.4%    26.16  0.996     407.7     10.7
+       2x / 2x   3.57       2888     2.420   -77.7%    26.16  0.972     386.6     10.1
+       4x / 2x   4.12       4816     2.847  -109.0%    26.16  0.998     494.8     12.9
+       4x / 1x   6.40       6914     4.298  -215.6%    26.16  0.999     600.0     15.7
+
+Conventional inverter simply shrunk (scale s on both widths) to match a LECTOR delay:
+(widths below the technology's minimum width are not manufacturable; the model may also be inaccurate there)
+unsized LECTOR   (tpd 85.4 ps, leak 0.603 nW)  vs  shrunk conventional: s = 0.31 (Wn 27 nm, Wp 55 nm), tpd 85.4 ps, leak 0.326 nW
+improved LECTOR  (tpd 65.2 ps, leak 0.647 nW)  vs  shrunk conventional: s = 0.39 (Wn 35 nm, Wp 70 nm), tpd 65.2 ps, leak 0.446 nW

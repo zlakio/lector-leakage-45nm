@@ -1,0 +1,18 @@
+
+45nm HP, nominal
+design            leak(nW)  vs conv  tpd(ps)  vs conv  Vhigh(V)
+Conventional         1.362     0.0%     26.2       0%     1.000
+Paper LECTOR         0.603    55.7%     85.4     227%     0.802
+Improved LECTOR      0.647    52.5%     65.2     149%     0.946
+
+45nm HP, |Vth| -50 mV (faster, leakier)
+design            leak(nW)  vs conv  tpd(ps)  vs conv  Vhigh(V)
+Conventional         5.037     0.0%     23.6       0%     1.000
+Paper LECTOR         2.053    59.2%     70.6     199%     0.869
+Improved LECTOR      2.237    55.6%     55.6     136%     0.987
+
+45nm HP, |Vth| +50 mV (slower, less leaky)
+design            leak(nW)  vs conv  tpd(ps)  vs conv  Vhigh(V)
+Conventional         0.422     0.0%     29.2       0%     1.000
+Paper LECTOR         0.231    45.3%    110.4     278%     0.751
+Improved LECTOR      0.241    42.8%     78.3     168%     0.898
